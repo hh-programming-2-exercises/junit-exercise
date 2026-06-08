@@ -1,30 +1,29 @@
-# Liukulukujen epätarkkuus
+# Floating-Point Inaccuracy
 
-Tämän repositorion tehtävää tehdessäsi saatat törmätä erikoiseen tilanteeseen, jossa testattava luku näyttää pyöristyvän väärin. Näin saattaa käydä erityisesti silloin, kun käytät testissäsi lukua, joka asettuu tasan sadasosien "puoliväliin", esim. `0,005`.
+While working on this repository task, you may run into a strange situation where the number under test appears to round incorrectly. This may happen especially when you use a value in your test that falls exactly halfway between hundredths, for example `0.005`.
 
-Ongelmaa voidaan havainnollistaa esimerkiksi lasekemalla yhteen `0.1 + 0.2` tai ottamalla luvusta `123_456.555` jakojäännös ykkösen kanssa. Tuloksina voisi olettaa olevan `0.3` ja `0.555`, mutta näin ei aivan ole:
+The problem can be illustrated, for example, by calculating `0.1 + 0.2` or by taking the remainder of `123_456.555` divided by 1. You might expect the results to be `0.3` and `0.555`, but that is not quite the case:
 
 ```java
-System.out.println(0.1 + 0.2);          // pitäisi tulostaa 0.3
+System.out.println(0.1 + 0.2);          // should print 0.3
 0.30000000000000004
 
-System.out.println(123_456.555 % 1);    // pitäisi tulostaa 0.555
+System.out.println(123_456.555 % 1);    // should print 0.555
 0.5549999999930151
 ```
 
-Se, että liukulukujen käsittelyssä tapahtuu hyvin pieniä virheitä, ei johdu Javasta, yksikkötesteistä eikä testattavasta koodista, vaan siitä, miten tietokoneet käsittelevät numeroita. [ChatGPT](https://chat.openai.com/) selittää asian erittäin selkeästi, joten tässä sen tuottama selitys ilmiöstä:
+The fact that very small errors occur when handling floating-point numbers is not caused by Java, unit tests, or the code being tested, but by how computers represent numbers. [ChatGPT](https://chat.openai.com/) explains this clearly, so here is its explanation of the phenomenon:
 
-> *Tietokoneet käyttävät liukulukulogiikkaa tallentaakseen ja käsitelläkseen desimaalilukuja. Tämä logiikka käyttää binäärijärjestelmää, joka koostuu nollista ja ykkösistä. Tämä aiheuttaa tiettyjä tarkkuusongelmia desimaalilukujen käsittelyssä.*
+> *Computers use floating-point logic to store and process decimal numbers. This logic uses the binary system, which consists of zeros and ones. This causes certain precision issues when working with decimal numbers.*
 >
-> *Useimmat desimaaliluvut eivät ole täysin tarkkoja binäärijärjestelmässä. Esimerkiksi tietokone esittää luvun 1/10 binäärimuodossa äärettömänä desimaalilukuna, joka toistaa tiettyjä numeroita ikuisesti (0.0001100110011...). Tämä johtaa tarkkuusongelmiin, kun desimaalilukuja muunnetaan binäärijärjestelmään ja päinvastoin.*
+> *Most decimal numbers cannot be represented exactly in binary. For example, a computer represents the number 1/10 in binary as an infinite decimal-like expansion that repeats certain digits forever (0.0001100110011...). This leads to precision issues when decimal numbers are converted to binary and back.*
 >
-> *Tämä tarkoittaa sitä, että kun desimaalilukuja muunnetaan binäärimuotoon, niiden tarkka esitys voi vaatia äärettömän monta binaarimerkkiä. Tietokoneet eivät voi tallentaa ääretöntä määrää merkkejä muistissaan, joten ne joutuvat leikkaamaan ja pyöristämään lukuja, mikä johtaa tarkkuuden menetykseen.*
+> *This means that when decimal numbers are converted to binary form, their exact representation may require infinitely many binary digits. Computers cannot store an infinite number of digits in memory, so they must cut and round values, which causes loss of precision.*
 >
-> *Tämä tarkkuuden menetys aiheuttaa desimaalilukujen esitysten poikkeamia, erityisesti laskutoimituksissa, joissa pyöristykset ja leikkaukset kasaantuvat, aiheuttaen pieniä virheitä lopputuloksissa. Näitä virheitä kutsutaan liukulukutarkkuusongelmiksi, ja ne ovat ominaisia kaikille tietokoneille, jotka käyttävät liukulukulogiikkaa desimaalilukujen käsittelyssä.*
+> *This loss of precision causes small deviations in decimal representations, especially in calculations where rounding and truncation accumulate, producing small errors in final results. These errors are called floating-point precision issues, and they are characteristic of all computers that use floating-point logic for decimal calculations.*
 >
-> ChatGPT (GPT-3.5). https://chat.openai.com/. 8.11.2023
+> ChatGPT (GPT-3.5). https://chat.openai.com/. 8 Nov 2023
 
+As a solution to avoid floating-point precision problems in this exercise, we recommend using test values that are slightly away from exact halfway points between hundredths. This precision issue is not intentionally part of this exercise; it is simply a natural part of how computers work.
 
-Ratkaisuna liukulukujen epätarkkuuden aiheuttamien ongelmien välttämiseksi tässä tehtävässä suosittelemme, että käytät hieman sadasosien puolivälistä poikkeavia lukuja testeissäsi. Tätä tarkkuusongelmaa ei tapahdu tässä tehtävässä tarkoituksella, vaan se sattuu olemaan vain luonnollinen osa tietokoneen toimintaa.
-
-Voit lukea tarkemmin liukulukujen teknisestä toteutuksesta sekä niiden rajoitteista artikkelista ["What Every Computer Scientist Should Know About Floating-Point Arithmetic" (oracle.com)](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html).
+You can read more about the technical implementation and limitations of floating-point numbers in the article ["What Every Computer Scientist Should Know About Floating-Point Arithmetic" (oracle.com)](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html).

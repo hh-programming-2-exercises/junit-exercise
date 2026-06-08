@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "PriceFormatterTest: original code",
+      "run": "./gradlew test --tests PriceFormatterTest && touch success.txt",
+      "points": 0
+    },
+    {
+      "name": "PriceFormatterTest: bug #1 - tests should not pass",
+      "run": "bash .grading/tests/price-formatter-bug.sh bug1.txt",
+      "points": 10
+    },
+    {
+      "name": "PriceFormatterTest: bug #2 - tests should not pass",
+      "run": "bash .grading/tests/price-formatter-bug.sh bug2.txt",
+      "points": 10
+    },
+    {
+      "name": "PriceFormatterTest: bug #3 - tests should not pass",
+      "run": "bash .grading/tests/price-formatter-bug.sh bug3.txt",
+      "points": 10
+    },
+    {
+      "name": "PriceFormatterTest: bug #4 - tests should not pass",
+      "run": "bash .grading/tests/price-formatter-bug.sh bug4.txt",
+      "points": 10
+    },
+    {
+      "name": "PriceFormatterTest: bug #5 - tests should not pass",
+      "run": "bash .grading/tests/price-formatter-bug.sh bug5.txt",
+      "points": 10
+    },
+    {
+      "name": "DayOfYearTest: running your own tests",
+      "run": "bash .grading/tests/day-of-year-1.sh",
+      "points": 25
+    },
+    {
+      "name": "DayOfYearTest: verifying your fixes",
+      "run": "bash .grading/tests/day-of-year-2.sh",
+      "points": 25
+    }
+  ]
+}

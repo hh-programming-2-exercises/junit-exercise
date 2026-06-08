@@ -1,155 +1,158 @@
-> [!NOTE]  
-> The English translation for this exercise can be found in [this file](./readme.en.md).
+# Unit testing with the JUnit tool
 
-# Yksikkötestaus JUnit-työkalulla
+This assignment repository contains Java exercises to practice unit testing with the help of the JUnit tool. To support the exercises, we recommend the following materials:
 
-Tämä repositorio sisältää Java-harjoituksia, joiden avulla harjoittelet yksikkötestausta [JUnit-työkalun](https://junit.org) avustuksella.
+- [JUnit 5 User Guide (junit.org)](https://junit.org/junit5/docs/current/user-guide/)
+- [Java Unit Testing with JUnit (Coding with John, YouTube)](https://youtu.be/vZm0lHciFsQ)
+- [Introduction to testing (mooc.fi)](https://java-programming.mooc.fi/part-6/3-introduction-to-testing)
+- [Lesson examples](https://github.com/hh-programming-2/lessons?tab=readme-ov-file#lesson-3-junit)
 
-Aikaisemmista tehtävistä poiketen tässä tehtävässä ei ole valmiita testejä, vaan kirjoitat testit itse. Testattavat Java-luokat ovat sen sijaan valmiiksi projektipohjassa.
+Unlike previous exercises, this assignment does not have pre-written tests; you will write the tests yourself. However, the Java classes to be tested are already in the project template.
 
-Voit suorittaa testisi joko koodieditorisi testaustyökalulla ([VS Code](https://code.visualstudio.com/docs/java/java-testing), [Eclipse](https://www.vogella.com/tutorials/JUnitEclipse/article.html)) tai [Gradle-automaatiotyökalulla](https://docs.gradle.org/current/userguide/java_testing.html).
+You can run your tests using either the testing tool in your code editor ([VS Code](https://code.visualstudio.com/docs/java/java-testing), [Eclipse](https://www.vogella.com/tutorials/JUnitEclipse/article.html)) or the [Gradle automation tool](https://docs.gradle.org/current/userguide/java_testing.html).
 
+## Starting the assignment
 
-## Tehtävän aloittaminen
-
-Aloita kloonaamalla Git-repositorio omalle koneellesi. Harjoitus täytyy tehdä omassa kopiossasi, eli varmista, että repositorion osoitteessa on mukana oma GitHub-käyttäjätunnuksesi! Oman kopiosi saat luotua kurssitoteutuksesi tehtävänannon GitHub classroom -linkin kautta.
+Once you have created your own repository from the assignment's template repository, clone your Git repository to your own computer using the `git clone` command. The assignment must be done in your own copy, so **make sure that your GitHub username is included in the repository address!**
 
 ```sh
-git clone https://github.com/varmista-etta-github-tunnuksesi-on-repositorion-osoitteessa.git
+git clone https://github.com/YOUR_GITHUB_USERNAME/programming-2-junit.git
 ```
 
-Kloonattuasi projektin omalle koneellesi, avaa se koodieditorissasi.
+After cloning the project to your local machine, open it in your code editor.
 
+## Submitting solutions
 
-## Vastausten lähettäminen
+Once you have solved some or all of the exercises and committed your answers, submit the solutions for evaluation using the `git push` command. Git push will automatically trigger a GitHub Actions workflow that compiles and tests your solutions, providing a pass or fail result for each test.
 
-Kun olet saanut osan tai kaikki tehtävistä ratkaistua ja commitoinut vastauksesi, lähetä ratkaisut arvioitavaksi `git push`-komennolla. Git push käynnistää automaattisesti GitHub actions -workflow:n, joka kääntää sekä testaa ratkaisusi ja antaa jokaisesta testistä joko hyväksytyn tai hylätyn tuloksen.
+Once the GitHub Actions has executed your code, you see the results in your GitHub repository's ["Actions" tab](../../actions/workflows/grading.yml). It usually takes a few minutes for the assesment to be completed. 
 
-Kun GitHub Actions on saanut koodisi suoritettua, näet tuloksen GitHub-repositoriosi [Actions-välilehdellä](../../actions/workflows/classroom.yml). Arvioinnin valmistumiseen menee tyypillisesti pari minuuttia.
+By clicking on the latest *"Grading"* execution from the link above, you will get detailed information about the task evaluation. The red cross symbol ❌ on the execution indicates that you don't have the full points yet, whereas the green checkmark ✅ indicates you have the full points. The "Grading summary" section contains your total points and a breakdown of points from each part.
 
-Klikkaamalla yllä olevan linkin takaa viimeisintä *"GitHub Classroom Workflow"* -suoritusta, saat tarkemmat tiedot tehtävän arvioinnista. Sivun alaosassa näkyy saamasi pisteet. Klikkaamalla "Autograding"-otsikkoa pääset katsomaan tarkemmin arvioinnissa suoritetut vaiheet ja niiden tulokset. Kuvitetun ohjeen aiheesta löydät GitHubin dokumentista [View autograding results (github.com)](https://docs.github.com/en/education/manage-coursework-with-github-classroom/learn-with-github-classroom/view-autograding-results).
+> [!TIP] 
+> You can submit your solution (by using the `git push` command) for evaluation as many times as needed until the task deadline. However, make sure that the latest submission yields the best points, as only the most recent points will be valid.
 
-💡 *Voit lähettää ratkaisusi arvioitavaksi niin monta kertaa kuin on tarpeen tehtävän määräaikaan asti. Varmista kuitenkin, että viimeisin suoritus tuottaa parhaat pisteet, koska vain viimeisimmät pisteet jäävät voimaan.*
+## Exercise 1: PriceFormatter
 
-
-## Tehtävä 1: PriceFormatter
-
-Tässä tehtävässä sinun tulee kirjoittaa yksikkötestejä valmiille `PriceFormatter`-luokalle ja siellä olevalle `formatPrice`-metodille. Metodi saa parametrinaan liukuluvun ja se palauttaa sen merkkijonoksi muotoiltuna tiettyjen sääntöjen mukaisesti. Metodin kutsuminen onnistuu esim. seuraavasti:
+In this exercise, you need to write unit tests for the provided `PriceFormatter` class and its `formatPrice` method. The method takes a floating-point number as a parameter and returns it formatted as a string according to specific rules. You can call the method as follows:
 
 ```java
 PriceFormatter formatter = new PriceFormatter();
-String price = formatter.formatPrice(3.141592653589793); // Palauttaa "3,14 €"
+String price = formatter.formatPrice(3.141592653589793); // Returns "3,14 €"
 ```
 
-Perustapauksessa metodin pitäisi muotoilla annettu liukuluku muotoon `"123 456,79 €"`. Muotoilun suhteen on seuraavat tarkentavat säännöt:
+In the basic case, the method should format the given floating-point number as `"123 456,79 €"`. The formatting rules are as follows:
 
-1. Tuhaterottimena on välilyönti.
-1. Desimaalierottimena on pilkku.
-1. Desimaaliosa on kahden numeron pituinen, seuraavin tarkennuksin:
-    1. Desimaaliosa pyöristetään lähimpään sadasosaan (eli senttiin). [Lisävinkki](./rounding.md).
-    1. Jos desimaaliosa on pyöristyksen jälkeen nolla, jätetään desimaaliosa kokonaan pois.
-1. Hinnan lopussa on Euro-symboli `€`.
+1. A space is used as the thousands separator.
+2. A comma is used as the decimal separator.
+3. The decimal part is two digits long, with the following clarifications:
+    1. The decimal part is rounded to the nearest hundredth (i.e., cent). Additional tip.
+    2. If the decimal part is zero after rounding, it is omitted entirely.
+4. The Euro symbol `€` is placed at the end of the price.
 
-**Huomaa, että sinun ei tarvitse itse toteuttaa yllä esitettyä metodia tai siihen kuuluvia ehtoja.** Metodin toteuttamisen sijasta harjoittelemme valmiin metodin *testaamista*.
+**Note that you do not need to implement the method or its conditions yourself.** Instead of implementing the method, we will practice *testing* the provided method.
 
-### PriceFormatterTest *(perusteet)*
+### PriceFormatterTest *(basics)*
 
-Toteuta tehtäväpohjan [PriceFormatterTest](./src/test/java/price/formatter/PriceFormatterTest.java)-luokkaan omat yksikkötestit, jotka varmistavat eri syötteiden avulla, että valmis `formatPrice`-metodi toimii edellä kuvatulla tavalla. Suosittelemme, että kirjoitat jokaista sääntöä kohden oman erillisen testimetodin.
+Implement your own unit tests in the [PriceFormatterTest](./src/test/java/price/formatter/PriceFormatterTest.java) class of the task template to ensure that the provided `formatPrice` method works as described above with different inputs. We recommend writing a separate test method for each rule.
 
-Kutsu testimetodeissasi `formatPrice`-metodia erilaisilla parametreilla ja varmista, että metodin palauttamat arvot ovat esitettyjen sääntöjen mukaisia:
+In your test methods, call the `formatPrice` method with various parameters and ensure that the values returned by the method comply with the specified rules:
 
 ```java
 PriceFormatter formatter = new PriceFormatter();
-String result = formatter.formatPrice(Math.PI); // pitäisi olla 3,14 €
+String result = formatter.formatPrice(Math.PI); // Should be 3,14 €
 ```
 
-Voit suorittaa testisi joko koodieditorisi testaustyökalulla ([VS Code](https://code.visualstudio.com/docs/java/java-testing), [Eclipse](https://www.vogella.com/tutorials/JUnitEclipse/article.html)) tai [Gradle-automaatiotyökalulla](https://docs.gradle.org/current/userguide/java_testing.html):
+You can run your tests using either the testing tool in your code editor ([VS Code](https://code.visualstudio.com/docs/java/java-testing), [Eclipse](https://www.vogella.com/tutorials/JUnitEclipse/article.html)) or the [Gradle automation tool](https://docs.gradle.org/current/userguide/java_testing.html):
 
 ```
 ./gradlew test --tests PriceFormatterTest       # unix
 .\gradlew.bat test --tests PriceFormatterTest   # windows
 ```
 
-✅ Huomaa, että omien testiesi tulisi tässä vaiheessa mennä läpi, koska testattavassa metodissa ei *pitäisi* olla loogisia virheitä.
+> [!NOTE] 
+> Note that your own tests should pass at this stage because the method being tested should not have logical errors.
 
-💡 *Metodin testaamiseksi sinun ei tarvitse perehtyä sen lähdekoodiin. Tärkeämpää on, että tiedossasi on yllä esitetyt metodin toimintaa koskevat **vaatimukset**.*
+> [!TIP]
+> To test the method, you do not need to delve into its source code. What is more important is that you are aware of the **requirements** for the method's functionality as described above.
 
-💡 *Jos käytät testeissäsi lukuja, joka asettuvat tasan sadasosien "puoliväliin", saatat törmätä liukulukujen rajallista tarkkuutta koskeviin ongelmiin. Ongelma ei johdu Javasta eikä omasta tai testattavasta koodista, vaan siitä, miten tietokoneet käsittelevät desimaaliosia. Tarkempi selitys aiheesta löytyy tämän repositorion tiedostosta [rounding.md](./rounding.md) tai artikkelista ["What Every Computer Scientist Should Know About Floating-Point Arithmetic" (oracle.com)](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html).*
+> [!TIP]
+> If you use numbers in your tests that fall exactly halfway between hundredths, you might encounter issues related to the limited precision of floating-point numbers. This problem is not due to Java or your own or the tested code, but rather how computers handle decimal fractions. A more detailed explanation can be found in the file [rounding.md](./rounding.md) in this repository or in the article ["What Every Computer Scientist Should Know About Floating-Point Arithmetic" (oracle.com)](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html).
 
-⛔ *Et saa tehdän lainkaan muutoksia `PriceFormatter`-luokkaan.*
+> [!IMPORTANT]
+> You must not make any changes to the `PriceFormatter` class.
 
+### Exercise's points *(5 * 10 %)*
 
-### Tehtävän pisteytys *(5 * 10 %)*
+The fact that tests "pass" does not necessarily mean that the tests are comprehensive or that the code being tested is bug-free. To ensure that your tests are comprehensive, your tests will also be run against **five different buggy versions** 😈. Your tests must find the bugs hidden in these versions.
 
-Se, että testit "menevät läpi", ei välttämättä tarkoita, että testit olisivat kattavat tai että testattavassa koodissa ei olisi bugeja. Jotta varmistamme, että testisi ovat kattavat, ajetaan testisi myös **viittä eri tavoin bugista versioita vasten** 😈. Kirjoittamiesi testien tulee löytää näissä versioissa piilevät bugit.
+If you wrote comprehensive test cases for all the formatting rules mentioned earlier, this part does not require changes to your tests 😎. If your tests do not find all the bugs in the GitHub's automatic check, continue developing the [`PriceFormatterTest`](./src/test/java/price/formatter/PriceFormatterTest.java) class and ensure that your tests check all the formatting rules mentioned above with different inputs.
 
-Jos kirjoitit kattavat testitapaukset kaikille aiemmin esitetyille muotoilusäännöille, tämä osa ei edellytä muutoksia testeihisi 😎. Mikäli testisi eivät löydä kaikkia bugeja GitHub classroomin automaattisessa tarkastuksessa, jatka [`PriceFormatterTest`-luokan](./src/test/java/price/formatter/PriceFormatterTest.java) kehittämistä ja varmista, että testisi tarkastavat kaikki ylempänä esitetyt muotoilusäännöt erilaisten syötteiden avulla.
+> [!NOTE] 
+> In this part, your tests will be run five times against five different buggy versions of the `formatPrice` method. You will score points for each run if the buggy version of the `formatPrice` method **causes an error** in at least one of your test methods. If the tests pass, it means the bug was not found, and you will not score points.
 
+> [!NOTE]
+> Running these applied tests requires that the original working version of the `formatPrice` method first passes your own tests.
 
-💡 *Tässä osassa testisi ajetaan viiteen kertaan viittä eri tavoin bugista `formatPrice`-metodia vasten. Saat kustakin suorituksesta pisteet, mikäli buginen versio `formatPrice`-metodista **aiheuttaa virheen** vähintään yhdessä testimetodissasi. Jos testit menevät läpi, tarkoittaa se, että bugi jäi löytymättä. Tällöin myös pisteet jäävät saamatta.*
+> [!NOTE]
+> The task assessment applies a method called mutation testing: _"Mutation testing is used to design new software tests and evaluate the quality of existing software tests. Mutation testing involves modifying a program in small ways."_ [(Wikipedia)](https://en.wikipedia.org/wiki/Mutation_testing).
 
-💡 *Näiden soveltavien testien suorittaminen edellyttää, että alkuperäinen toimiva versio `formatPrice`-metodista läpäisee ensin omat testisi.*
+## Exercise 2: DayOfYear *(applying, 2 * 25 %)*
 
-🚀 *Tehtävän tarkastuksessa sovelletaan menetelmää nimeltä mutaatiotestaus: "Mutation testing is used to design new software tests and evaluate the quality of existing software tests. Mutation testing involves modifying a program in small ways." [(Wikipedia)](https://en.wikipedia.org/wiki/Mutation_testing)*
+In the second exercise of this repository, you need to implement JUnit unit tests for the [provided `DayOfYear` class](./src/main/java/refactoring/DayOfYear.java). The class has one static method named `dayOfYear`. This method takes a date as three integers and should return the ordinal number of the given date in that year (1-366). The first day of the year is numbered 1, and the last day is either 365 or 366, depending on the year.
 
-
-
-## Tehtävä 2: DayOfYear *(soveltava, 2 * 25 %)*
-
-Tämän tehtävärepositorion toisessa tehtävässä sinun tulee toteuttaa JUnit-yksikkötestit [valmiiksi annetulle `DayOfYear`-luokalle](./src/main/java/refactoring/DayOfYear.java). Luokassa on yksi staattinen metodi nimeltään `dayOfYear`. Tämä metodi saa parametreinaan päivämäärän kolmena kokonaislukuna ja sen pitäisi palauttaa annetun päivämäärän järjestysnumeron kyseisenä vuonna (1-366). Vuoden ensimmäinen päivä on numeroltaan 1 ja viimeinen vuodesta riippuen joko 365 tai 366.
-
-Metodin sisällön lukeminen ja ymmärtäminen eivät ole testien kannalta välttämätöntä. Suunnittele testitapaukset sen mukaan, miten metodin **pitäisi** toimia eikä sen mukaan miten se oikeasti toimii.
+Reading and understanding the method's content is not necessary for the tests. Design the test cases based on how the method **should** work, not how it actually works.
 
 > *"Some data sets specify dates using the year and day of year rather than the year, month, and day of month. The day of year (DOY) is the sequential day number starting with day 1 on January 1st."*
 >
 > [Day of the Year (DOY) calendar. National Snow and Ice Data Center](https://nsidc.org/data/user-resources/help-center/day-year-doy-calendar)
 
-Voit tutkia eri päivämääriä vastaavia "day of year"-lukuja esimerkiksi [Day of the Year (DOY) calendar -kalenterista](https://nsidc.org/data/user-resources/help-center/day-year-doy-calendar) (National Snow and Ice Data Center). Huomaa, että maaliskuusta alkaen eri päivien numerot vaihtelevat tavallisina- ja karkausvuosina.
+You can explore the "day of year" numbers corresponding to different dates using the [Day of the Year (DOY) calendar](https://nsidc.org/data/user-resources/help-center/day-year-doy-calendar) (National Snow and Ice Data Center). Note that from March onwards, the numbers for different days vary between common and leap years.
 
-**Annetussa metodissa on bugeja**, jotka tässä tehtävässä tulee löytää omilla JUnit-testeillä.
+**The provided method contains bugs**, which you need to find using your own JUnit tests in this task.
 
+### Part 2.1: write JUnit unit tests for the `dayOfYear` method
 
-### Osa 2.1: kirjoita `dayOfYear`-metodille JUnit-yksikkötestit
+Add a new test class `DayOfYearTest` to the project, where you will use the JUnit testing library to test the functionality of the `dayOfYear` method with various test cases. Test classes should be added to the [src/test/java/](./src/test/java/) directory so that JUnit can find them and utilize the JUnit library. Test classes are typically located in the same package as the classes being tested, so in this case, create a package named `refactoring` in the `src/test/java` directory for this new test. Also, add the line `package refactoring;` at the beginning of your test class.
 
-Lisää projektiin uusi testiluokka `DayOfYearTest`, jossa hyödynnät  JUnit-testikirjastoa testataksesi `dayOfYear`-metodin toimivuutta erilaisilla testitapauksilla. Testiluokat tulee lisätä [src/test/java/](./src/test/java/)-hakemistoon, jotta JUnit löytää ne ja jotta niissä voidaan hyödyntää JUnit-kirjastoa. Testiluokat sijaitsevat tyypillisesti samannimisessä paketissa kuin testattavat luokat, eli tässä tapauksessa luo `src/test/java`-hakemistoon tätä uutta testiä varten paketti nimeltä `refactoring`. Lisää testiluokkasi alkuun myös rivi: `package refactoring;`.
+Write sufficient test cases in your test class to verify the method's functionality and any potential errors at different times of the year, considering the leap year logic. Write each test case in its own `@Test` method.
 
-Kirjoita testiluokkaasi riittävät testitapaukset, jotta voit todentaa metodin toiminnan ja siinä mahdollisesti esiintyvät virheet vuoden eri ajankohtina huomioiden karkausvuosilogiikan. Kirjoita eri testitapaukset kukin omaan `@Test`-metodiin.
-
-Voit suorittaa testiluokkasi tuttuun tapaan joko koodieditorillasi tai Gradlen avulla. Automaattisessa arvioinnissa testisi suoritetaan komennolla:
+You can run your test class as usual, either with your code editor or with Gradle. In the automatic assessment, your tests will be run with the command:
 
 ```
 ./gradlew test --tests DayOfYearTest       # unix
 .\gradlew.bat test --tests DayOfYearTest   # windows
 ```
 
-💡 *Tässä vaiheessa testisi toivottavasti löytävät metodissa valmiiksi olevia bugeja, joten kaikki testit eivät vielä mene läpi.*
+> [!NOTE]  
+> At this stage, your tests will hopefully find the pre-existing bugs in the method, so not all tests will pass yet.
 
-💡 *Muista lisätä uusi `src/test/refactoring`-hakemisto ja `DayOfYearTest.java`-tiedosto versionhallintaan `git add`-komennolla. Katso tarvittaessa `git status`, joka kertoo miten tämä tehdään.*
+> [!TIP]  
+> Remember to add the new `src/test/refactoring` directory and `DayOfYearTest.java` file to version control with the `git add` command. If needed, check `git status` for instructions on how to do this.
 
+### Part 2.2: fixing and refactoring the `dayOfYear` method
 
-### Osa 2.2: `dayOfYear`-metodin korjaus ja refaktorointi
+So far in your programming studies, you may have focused mainly on getting your programs to work according to the assignment without paying much attention to their readability or maintainability. We can assume that the given `dayOfYear` method was created in this way. In professional software development, it is rare for the same code to be worked on only once or by only one developer. On the contrary, code is written in teams where developers change, and existing features are constantly modified and fixed.
 
-Tähän asti olet ohjelmointiopinnoissasi kenties keskittynyt lähinnä saamaan ohjelmasi toimimaan tehtävänannon mukaisesti kiinnittämättä suurempaa huomiota sen ymmärrettävyyteen tai jatkokehitettävyyteen. Voimme olettaa myös annetun `dayOfYear`-metodin syntyneen näin. Ammatillisessa ohjelmistokehityksessä on harvinaista, että samaa koodia työstettäisiin vain kerran tai vain yhden kehittäjän toimesta. Päinvastoin, koodia kirjoitetaan tiimeissä, joissa kehittäjät vaihtuvat ja olemassa oleviin ominaisuuksiin tehdään jatkuvasti muutoksia ja korjauksia.
+You will therefore be further developing code written by someone else years ago, just as someone else will be further developing your code. It is very important that the code can be modified without unexpected breakages and that other developers understand each other's code and can use and modify it.
 
-Tulet siis itse jatkokehittämään jonkun toisen vuosia sitten kirjoittamaa koodia, aivan kuten joku muu tulee jatkokehittämään sinun koodiasi. Tällöin on erittäin tärkeää, että koodi on muokattavissa ilman odottamattomia rikkoutumisia ja että muut kehittäjät ymmärtävät toistensa koodia ja pystyvät hyödyntämään ja muokkaamaan sitä.
+When you read the code contained in the `dayOfYear` method more closely, you will notice that it uses basic programming structures quite narrowly. The code consists of a very long `if-else` structure and similar integer additions. The same numbers also appear repeatedly in the code and may be incorrect.
 
-Kun luet `dayOfYear`-metodin sisältämää koodia tarkemmin, huomaat, että siinä on käytetty ohjelmoinnin perusrakenteita melko suppeasti. Koodi koostuukin erittäin pitkästä `if-else`-rakenteesta sekä samanlaisista kokonaislukujen yhteenlaskuista. Samat numerot myös esiintyvät koodissa toistuvasti ja ne saattavat olla virheellisiä.
+When fixing bugs, you might find the Java [`Year` class and its `isLeap` method](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Year.html#isLeap(long)) useful. You can also check the correct lengths of different months, for example, on [Wikipedia](https://fi.wikipedia.org/wiki/Kuukausi). However, hardcoding the lengths of months is not necessarily advisable, as Java already provides both the [Month](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Month.html) and [YearMonth](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/YearMonth.html) classes, which [contain logic for calculating the lengths of months](https://github.com/AdoptOpenJDK/openjdk-jdk9u/blob/9347c48cc4ce5d966c7f0c0a751c313eb0cba99a/jdk/src/java.base/share/classes/java/time/Month.java#L425-L437).
 
-Bugien korjauksessa sinulle voi olla hyötyä Javan valmiista [`Year`-luokasta ja sen `isLeap`-metodista](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Year.html#isLeap(long)). Voit myös tarkistaa eri kuukausien oikeat pituudet esimerkiksi [Wikipediasta](https://fi.wikipedia.org/wiki/Kuukausi). Kuukausien pituuksien "kovakoodaus" ei toisaalta ole välttämättä kannattavaa, koska Javasta löytyy valmiiksi sekä [Month](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Month.html)- että [YearMonth](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/YearMonth.html)-luokat, jotka [sisältävät logiikkaa kuukausien pituuksien laskemiseksi](https://github.com/AdoptOpenJDK/openjdk-jdk9u/blob/9347c48cc4ce5d966c7f0c0a751c313eb0cba99a/jdk/src/java.base/share/classes/java/time/Month.java#L425-L437).
+> [!IMPORTANT]
+> The code you fix should be more understandable and maintainable than the original code, but it should function externally in the same way. **Therefore, you must not change the method's signature or the order of its parameters.**
 
-📣 Korjaamasi koodin tulee olla ymmärrettävämpää ja ylläpidettävämpää kuin alkuperäinen koodi, mutta toimia ulkoisesti samalla tavalla. **Et siis saa muuttaa metodin otsikkoa etkä esimerkiksi parametrien järjestystä.**
-
-> *"Refaktorointi tarkoittaa prosessia, jossa tietokoneohjelman lähdekoodia muutetaan siten, että sen toiminnallisuus säilyy, mutta sen sisäinen rakenne muuttuu. Muutokset voivat koskea esimerkiksi luettavuutta tai ohjelmakomponenttien työnjaon selkeyttämistä."*
+> *"In computer programming and software design, code refactoring is the process of restructuring existing source code—changing the factoring—without changing its external behavior. Refactoring is intended to improve the design, structure, and/or implementation of the software (its non-functional attributes), while preserving its functionality."*
 >
-> Wikipedia. [Refaktorointi](https://fi.wikipedia.org/wiki/Refaktorointi). Viitattu 28.11.2023. [CC BY–SA 3.0](https://fi.wikipedia.org/wiki/Wikipedia:Creative_Commons_Attribution-Share_Alike_3.0_Unported_-lisenssiehdot)
+> Wikipedia. [Code refactoring](https://en.wikipedia.org/wiki/Code_refactoring). Cited on 20.11.2024. [CC BY–SA 3.0](https://fi.wikipedia.org/wiki/Wikipedia:Creative_Commons_Attribution-Share_Alike_3.0_Unported_-lisenssiehdot)
 
-
-⛔ *Javan standardikirjastossa on olemassa useita valmiita toimivia toteutuksia päivän järjestysnumeron laskemiselle. Oikeassa ohjelmistoprojektissa sinun tulisi luonnollisesti käyttää valmista ratkaisua, eikä yrittää keksiä pyörää uudestaan. Tämän harjoituksen tavoitteena on kuitenkin opetella testaamaan ja refaktoroimaan koodia, joten suosittelemme muodostamaan oman ratkaisun annettua koodia muokkaamalla.*
-
+> [!IMPORTANT]
+> The Java standard library contains several ready-made implementations for calculating the ordinal number of a day. In a real software project, you should naturally use an existing solution rather than trying to reinvent the wheel. However, the goal of this exercise is to learn how to test and refactor code, so we recommend creating your own solution by modifying the given code.
 
 **"Code smells"**
 
-Tutustu seuraaviin "koodin hajuihin" esimerkkikoodissa ja parantele koodia parhaasi mukaan:
+Familiarize yourself with the following "code smells" in the example code and improve the code as best as you can:
 
 - [Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
 - [Comments Where Needed](https://stackoverflow.blog/2021/12/23/best-practices-for-writing-code-comments/)
@@ -157,50 +160,44 @@ Tutustu seuraaviin "koodin hajuihin" esimerkkikoodissa ja parantele koodia parha
 - [Avoid Magic Numbers](https://en.wikipedia.org/wiki/Magic_number_(programming))
 - [One Purpose For Each Variable](https://en.wikipedia.org/wiki/Single-responsibility_principle)
 
-Edellä mainittu lista koodin "hajuista" on käyty läpi tämän saman esimerkkikoodin avulla osoitteessa [https://web.mit.edu/6.005/www/fa16/classes/04-code-review/](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/). Voit käyttää myös muita lähteitä.
+The above list of code smells has been reviewed using this same example code at <https://web.mit.edu/6.005/www/fa16/classes/04-code-review/>. You can also use other sources.
 
+**Links**
 
-**Linkit**
+* [Year class](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/Year.html)
+* [Month class](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/Month.html)
+* [YearMonth class](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/YearMonth.html)
+* [The original source for the exercise](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/)
 
-* [Year-luokka](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/Year.html)
-* [Month-luokka](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/Month.html)
-* [YearMonth-luokka](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/time/YearMonth.html)
-* [Tehtävän alkuperäinen lähde](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/)
+### Invalid parameters &mdash; a bug or a feature? *(something to consider)*
 
+In the [original source](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/#fail_fast) of the `dayOfYear` example code, the fail fast approach is highlighted, which suggests that problems are easier to fix the earlier they are detected. In the case of this method, it returns integers regardless of whether the month and day numbers are given in the correct order or within valid ranges.
 
-### Virheelliset parametrit &mdash; bugi vai ominaisuus? *(pohdittavaa)*
+If you wish, you can add checks to the method and throw an `IllegalArgumentException` if the numbers provided to the method do not correspond to a real date. However, this is not necessary for the task, and we do not consider invalid inputs as bugs for this method.
 
-`dayOfYear`-esimerkkikoodin [alkuperäisessä lähteessä](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/#fail_fast) tuodaan esiin fail fast -ajattelutapa, jonka mukaisesti ongelmat on sitä helpompi korjata mitä aikaisemmin ne havaitaan. Tämän metodin tapauksessa metodi palauttaa kokonaislukuja riippumatta siitä, ovatko kuukausien ja päivien numerot annettu oikeassa järjestyksessä tai ovatko ne sallituilta väleiltä.
+### Exercise's points *(25 % + 25 %)*
 
-Voit halutessasi lisätä metodiin tarkastuksia ja heittää esimerkiksi `IllegalArgumentException`-poikkeuksen, mikäli metodille annetut numerot eivät vastaa todellista päivämäärää. Tämä ei kuitenkaan ole tehtävän kannalta välttämätöntä, emmekä laske virheellisiä syötteitä tämän metodin bugeiksi.
-
-
-### Tehtävän pisteytys *(25 % + 25 %)*
-
-`DayOfYear`-tehtävä arvioidaan automaattisesti kahdessa osassa. Ensimmäisessä osassa suoritamme oman `DayOfYearTest`-testiluokkasi, jonka tulee läpäistä kaikki kirjoittamasi testit.
+The `DayOfYear` exercise is automatically evaluated in two parts. In the first part, we run your own `DayOfYearTest` test class, which must pass all the tests you have written.
 
 ```
 ./gradlew test --tests DayOfYearTest       # unix
 .\gradlew.bat test --tests DayOfYearTest   # windows
 ```
 
-Toisessa osassa suoritamme erillisen testiluokan, jossa varmistetaan, että `dayOfYear`-metodi toimii oikein tekemiesi korjausten jälkeen. Mikäli erillinen testiluokka havaitsee virheitä automaattisessa arvioinnissa, lue tarkasti [Actions-välilehdeltä](../../actions/workflows/classroom.yml) löytyvä raportti testien suorituksesta.
+In the second part, we run a separate test class to ensure that the `dayOfYear` method works correctly after your corrections. If the separate test class detects errors in the automatic evaluation, carefully read the report on the test execution found in the [Actions tab](../../actions/workflows/grading.yml).
 
+## License and authors
 
+### DayOfYear Example Class (Smelly Example #1)
 
-## Lisenssi ja tekijät
-
-### DayOfYear-esimerkkiluokka (Smelly Example #1)
-
-Tehtävässä hyödynnetty [`DayOfYear`-esimerkkiluokka](./src/main/java/refactoring/DayOfYear.java) on lainattu [MIT:n Software Construction -kurssin oppimateriaaleista](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/). Sen tekijät ja lisenssi ovat:
+The [`DayOfYear` example class](./src/main/java/refactoring/DayOfYear.java) used in the task is borrowed from the [MIT Software Construction course materials](https://web.mit.edu/6.005/www/fa16/classes/04-code-review/). Its authors and license are:
 
 > *Collaboratively authored with contributions from: Saman Amarasinghe, Adam Chlipala, Srini Devadas, Michael Ernst, Max Goldman, John Guttag, Daniel Jackson, Rob Miller, Martin Rinard, and Armando Solar-Lezama.*
 >
 > *Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fi).*
 
+### This execise
 
-### Tämä tehtävä
+This exercise is made by Teemu Havulinna and translated to English by Kalle Ilves and it is licensed under a [Creative Commons BY-NC-SA license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Tämän tehtävän on kehittänyt Teemu Havulinna ja se on lisensoitu [Creative Commons BY-NC-SA -lisenssillä](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-
-Tehtävänannon, lähdekoodien ja testien toteutuksessa on hyödynnetty ChatGPT 3.5 -kielimallia sekä GitHub copilot -tekoälyavustinta.
+ChatGPT 3.5 language model and GitHub copilot AI assistant has been used to implement the exercise.
