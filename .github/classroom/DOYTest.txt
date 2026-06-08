@@ -1,0 +1,90 @@
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+
+import refactoring.DayOfYear;
+
+public class DOYTest {
+
+    @Test
+    void testFirstDayOfYear() {
+        assertDayOfYear(1, LocalDate.of(2019, 1, 1));
+        assertDayOfYear(1, LocalDate.of(2020, 1, 1));
+        assertDayOfYear(1, LocalDate.of(2100, 1, 1));
+    }
+
+    @Test
+    void testLastDayOfNormalYear() {
+        assertDayOfYear(365, LocalDate.of(2025, 12, 31));
+        assertDayOfYear(365, LocalDate.of(2026, 12, 31));
+        assertDayOfYear(365, LocalDate.of(2027, 12, 31));
+    }
+
+    @Test
+    void testLastDayOfLeapYear() {
+        assertDayOfYear(366, LocalDate.of(2020, 12, 31));
+        assertDayOfYear(366, LocalDate.of(2024, 12, 31));
+        assertDayOfYear(366, LocalDate.of(2028, 12, 31));
+    }
+
+    @Test
+    void testEachDayOnNormalYear() {
+        testDaysOnYear(2019);
+    }
+
+    @Test
+    void testEachDayOnLeapYear() {
+        testDaysOnYear(2020);
+    }
+
+    @Test
+    void testYear2000IsLeapYear() {
+        int doy = DayOfYear.dayOfYear(12, 31, 2000);
+        assertEquals(366, doy, "Year 2000 should be leap year and should have 366 days");
+    }
+
+    @Test
+    void testYear2100IsNotLeapYear() {
+        int doy = DayOfYear.dayOfYear(12, 31, 2100);
+        assertEquals(365, doy, "Year 2100 should not be leap year and should have 365 days");
+    }
+
+    @Test
+    void testYear2400isLeapYear() {
+        int doy = DayOfYear.dayOfYear(12, 31, 2400);
+        assertEquals(366, doy, "Year 2400 should be leap year and should have 366 days");
+    }
+
+    /*
+     * This utility method tests each day of the given year to ensure that the
+     * dayOfYear method returns the correct day of the year for each day of the
+     * year.
+     *
+     * The purpose of this method is to reduce the amount of code duplication in the
+     * test methods regarding different types of years.
+     */
+    private void testDaysOnYear(int year) {
+        LocalDate date = LocalDate.of(year, 1, 1);
+
+        // Loop through each day of the given year and assert that the dayOfYear method
+        // returns the correct day of the year for each day.
+        for (int i = 1; date.getYear() == year; date = date.plusDays(1), i++) {
+            assertDayOfYear(i, date);
+        }
+    }
+
+    /*
+     * This utility method asserts that the given date is the given day of the year.
+     * Individual test methods do not need to duplicate calls to the dayOfYear
+     * method and the assertEquals method. Instead, they can just pass the expected
+     * day of the year and the date to this method.
+     */
+    private void assertDayOfYear(int expected, LocalDate date) {
+        int doy = DayOfYear.dayOfYear(date.getMonthValue(), date.getDayOfMonth(), date.getYear());
+
+        assertEquals(expected, doy, "Day " + date + " should be " + expected + " but it was " + doy);
+    }
+}
