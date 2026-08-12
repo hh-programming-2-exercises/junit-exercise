@@ -34,4 +34,4 @@ jobs:
 
       # Run grading
       - name: Grade
-        run: chmod +x .grading/grade.sh &&.grading/grade.sh
+        uses: hh-programming-2-exercises/grading-action@v0.0.1
